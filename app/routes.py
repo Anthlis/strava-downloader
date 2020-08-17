@@ -6,6 +6,7 @@ from flask import (render_template,
                    request, 
                    flash, 
                    url_for)
+from flask_login import current_user, login_user
 import requests
 
 from app import app
@@ -55,7 +56,6 @@ def authorization_successful():
     
     authorization_response = r.json()
     first_name = authorization_response['athlete']['firstname']
-    flash(f'Hi {first_name} your authorization was successful ')
+    flash(f'authorization was successful ')
 
-    #return redirect(url_for("index"))
-    return authorization_response
+    return render_template("athlete.html", athlete=first_name)

@@ -1,0 +1,2 @@
+FLASK_APP=strava_downloader.py
+FLASK_DEBUG=1

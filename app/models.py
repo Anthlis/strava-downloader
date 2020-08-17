@@ -1,6 +1,8 @@
-from app import db
+from flask_login import UserMixin
+from app import db, login
 
-class Athlete(db.Model):
+
+class Athlete(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.Text)
     lastname = db.Column(db.Text)
@@ -18,4 +20,7 @@ class Athlete(db.Model):
     def __repr__(self):
         return '<Athlete {} - {} >'.format(self.firstname, self.id)
     
+@login.user_loader
+def load_athlete(id):
+    return Athlete.query.get(int(id))
     
