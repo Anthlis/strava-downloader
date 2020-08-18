@@ -10,6 +10,8 @@ from flask_login import current_user, login_user
 import requests
 
 from app import app
+from app.utils import parse_response
+
 
 
 def authorize_url():
@@ -45,7 +47,7 @@ def authorization_successful():
         return redirect(url_for("index"))
 
     code = request.args.get('code')
-    scope = request.args.get('scope')
+
     params = {
         "client_id": os.getenv('STRAVA_CLIENT_ID'),
         "client_secret": os.getenv('STRAVA_CLIENT_SECRET'),
@@ -56,6 +58,9 @@ def authorization_successful():
     
     authorization_response = r.json()
     first_name = authorization_response['athlete']['firstname']
+
+    athlete = parse_response(authorization_response)
+
     flash(f'authorization was successful ')
 
     return render_template("athlete.html", athlete=first_name)

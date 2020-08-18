@@ -44,3 +44,5 @@ venv
 app.db
 strava_downloader.log*
 notes
+
+test_.py
