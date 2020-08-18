@@ -8,9 +8,13 @@ from flask import (render_template,
                    url_for)
 from flask_login import current_user, login_user
 import requests
+from dateutil.parser import parse
 
 from app import app
+from app import db
+from app.models import Athlete
 from app.utils import parse_response
+
 
 
 
@@ -58,9 +62,32 @@ def authorization_successful():
     
     authorization_response = r.json()
     first_name = authorization_response['athlete']['firstname']
+    id = authorization_response["athlete"]['id']
+    authenticated_athlete = Athlete.query.get(id)
 
-    athlete = parse_response(authorization_response)
+    if not authenticated_athlete:
+        # add new athlete to the db 
+        new_athlete = parse_response(authorization_response)
+        db.session.add(new_athlete)
+        db.session.commit()
+    
+    # update records of existing athlete
+
+    authenticated_athlete = Athlete.query.get(id)
+
+    authenticated_athlete.firstname = authorization_response["athlete"]["firstname"]
+    authenticated_athlete.lastname = authorization_response["athlete"]["lastname"]
+    authenticated_athlete.profile = authorization_response["athlete"]["profile"]
+    authenticated_athlete.profile_medium = authorization_response["athlete"]["profile_medium"]
+    authenticated_athlete.created_at = parse(authorization_response["athlete"]["created_at"])
+    authenticated_athlete.access_token = authorization_response["access_token"]
+    authenticated_athlete.expires_at = authorization_response["expires_at"]
+    authenticated_athlete.expires_in = authorization_response["expires_in"]
+    authenticated_athlete.refresh_token = authorization_response["refresh_token"]
+    authenticated_athlete.token_type = authorization_response["token_type"]
+
+    db.session.commit()
 
     flash(f'authorization was successful ')
 
-    return render_template("athlete.html", athlete=first_name)
+    return render_template("athlete.html", first_name=first_name)
