@@ -6,7 +6,7 @@ from flask import (render_template,
                    request, 
                    flash, 
                    url_for)
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 import requests
 from dateutil.parser import parse
 
@@ -90,10 +90,16 @@ def login():
 
     login_user(authenticated_athlete, remember=True)
 
-    return render_template("athlete.html", first_name=first_name)
+    return redirect(url_for("index"))
 
 @app.route("/logout")
 def logout():
     logout_user()
     flash(f'User successfully logged out')
     return redirect(url_for("index"))
+
+@app.route('/athlete/<id>')
+@login_required
+def athlete(id):
+    athlete = Athlete.query.filter_by(id=id).first_or_404()
+    return render_template('athlete.html', athlete=athlete)
