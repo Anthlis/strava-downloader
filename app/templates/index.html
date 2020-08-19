@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if current_user.is_anonymous %}
     <h3>To Authorise our app click on the link below</h3>
 
     <a href="{{ url_for('authorize') }}">Link</a>
-
+    {% endif %}
 {% endblock %}

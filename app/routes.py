@@ -6,7 +6,7 @@ from flask import (render_template,
                    request, 
                    flash, 
                    url_for)
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 import requests
 from dateutil.parser import parse
 
@@ -16,15 +16,13 @@ from app.models import Athlete
 from app.utils import parse_response
 
 
-
-
 def authorize_url():
     """Generate authorization uri"""
     app_url = 'http://127.0.0.1'
     params = {
         "client_id": os.getenv('STRAVA_CLIENT_ID'),
         "response_type": "code",
-        "redirect_uri": f"{app_url}:5000/authorization_successful",
+        "redirect_uri": f"{app_url}:5000/login",
         "scope": "read,profile:read_all,activity:read",
         "approval_prompt": "force"
     }
@@ -42,8 +40,10 @@ def index():
 def authorize():
     return redirect(authorize_url())
 
-@app.route("/authorization_successful")
-def authorization_successful():
+@app.route("/login")
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
     error = request.args.get('error')
     if error == 'access_denied':
         flash(f'You denied the required access for Strava Downloader to work')
@@ -88,6 +88,12 @@ def authorization_successful():
 
     db.session.commit()
 
-    flash(f'authorization was successful ')
+    login_user(authenticated_athlete, remember=True)
 
     return render_template("athlete.html", first_name=first_name)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash(f'User successfully logged out')
+    return redirect(url_for("index"))
