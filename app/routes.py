@@ -1,14 +1,20 @@
 import os
 import urllib
+from datetime import datetime
+from collections import defaultdict
 
 from flask import (render_template, 
                    redirect, 
                    request, 
                    flash, 
-                   url_for)
+                   url_for,
+                   make_response
+                   )
 from flask_login import current_user, login_user, logout_user, login_required
 import requests
 from dateutil.parser import parse
+from stravaio import StravaIO, strava_oauth2
+import pandas as pd
 
 from app import app
 from app import db
@@ -103,3 +109,29 @@ def logout():
 def athlete(id):
     athlete = Athlete.query.filter_by(id=id).first_or_404()
     return render_template('athlete.html', athlete=athlete)
+
+@app.route('/download_csv')
+def download_csv():
+    # TODO make router dynamic receiving athlete id and date from webform with validation rules
+    # id = 
+    authenticated_athlete = Athlete.query.get(id)
+    access_token = authenticated_athlete.access_token
+    client = StravaIO(access_token=access_token)
+
+    date_from = int(datetime(2020,7,1).timestamp())
+
+    activities = client.get_logged_in_athlete_activities(after=date_from)
+
+    df_data = defaultdict(list)
+
+    for activity in activities:
+        for k, v in activity.to_dict().items():
+            df_data[k].append(v)
+
+    df = pd.DataFrame(df_data)
+
+    resp = make_response(df.to_csv())
+    resp.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    resp.headers["Content-Type"] = "text/csv"
+
+    return resp   
