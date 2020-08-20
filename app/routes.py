@@ -115,8 +115,8 @@ def athlete(id):
 def download_csv():
     # TODO make router dynamic receiving athlete id and date from webform with validation rules
     # check if token still valid if not refresh token
-    # if token revolked or expired logout athlete and return to home page
-    # id = 
+    # if token revoked or expired logout athlete and return to home page
+    #id = XXXXXX
     authenticated_athlete = Athlete.query.get(id)
     access_token = authenticated_athlete.access_token
     client = StravaIO(access_token=access_token)
