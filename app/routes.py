@@ -90,7 +90,7 @@ def login():
 
     login_user(authenticated_athlete, remember=True)
 
-    return redirect(url_for("index"))
+    return redirect(url_for('athlete', id=current_user.id))
 
 @app.route("/logout")
 def logout():
