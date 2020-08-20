@@ -111,8 +111,11 @@ def athlete(id):
     return render_template('athlete.html', athlete=athlete)
 
 @app.route('/download_csv')
+@login_required
 def download_csv():
     # TODO make router dynamic receiving athlete id and date from webform with validation rules
+    # check if token still valid if not refresh token
+    # if token revolked or expired logout athlete and return to home page
     # id = 
     authenticated_athlete = Athlete.query.get(id)
     access_token = authenticated_athlete.access_token
