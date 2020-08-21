@@ -20,6 +20,7 @@ from app import app
 from app import db
 from app.models import Athlete
 from app.utils import parse_response
+from app.forms import SubmitDownload
 
 
 def authorize_url():
@@ -104,24 +105,28 @@ def logout():
     flash(f'User successfully logged out')
     return redirect(url_for("index"))
 
-@app.route('/athlete/<id>')
+@app.route('/athlete/<id>', methods=['POST','GET'])
 @login_required
 def athlete(id):
+    form = SubmitDownload()
     athlete = Athlete.query.filter_by(id=id).first_or_404()
-    return render_template('athlete.html', athlete=athlete)
+    if form.validate_on_submit():
+        date_from = form.dt.data.strftime('%Y-%m-%d')
+        #return form.dt.data.strftime('%Y-%m-%d')
+        return redirect( url_for('download_csv', id=current_user.id, date_from=date_from))
+    return render_template('athlete.html', athlete=athlete, form=form)
 
-@app.route('/download_csv')
+@app.route('/download_csv/<id>/<date_from>')
 @login_required
-def download_csv():
-    # TODO make router dynamic receiving athlete id and date from webform with validation rules
+def download_csv(id=None, date_from=None):
+    # TODO 
     # check if token still valid if not refresh token
     # if token revoked or expired logout athlete and return to home page
-    # id = XXXXXXX
+    date_from = int(parse(date_from).timestamp())
+    
     authenticated_athlete = Athlete.query.get(id)
     access_token = authenticated_athlete.access_token
     client = StravaIO(access_token=access_token)
-
-    date_from = int(datetime(2020,7,1).timestamp())
 
     activities = client.get_logged_in_athlete_activities(after=date_from)
 
