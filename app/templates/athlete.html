@@ -1,10 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h3>Hi {{ athlete.firstname }}</h3>
 
-select date you want to download your activities from
+<table>
+    <tr valign="top">
+        <td><img class="rounded-circle account-img" src="{{ athlete.profile_medium }}"></td>
+        <td>
+            <h2> <span><em>  Athlete </em> </span>: {{ athlete.firstname }} </h2>
+        </td>
+        <td>
+            <h2>{{ athlete.lastname }} </h2>
+        </td>
+    </tr>
+</table>
 
+<hr>
+<div>
+<h3>Select date you want to download your activities from</h3>
+</div>
+<hr>
 <form action="#" method="post">
     {{ form.dt(class='datepicker') }}
     {{ form.hidden_tag() }}

@@ -53,7 +53,7 @@ def login():
         return redirect(url_for("index"))
     error = request.args.get('error')
     if error == 'access_denied':
-        flash(f'You denied the required access for Strava Downloader to work')
+        flash('You denied the required access for Strava Downloader to work', 'danger')
 
         return redirect(url_for("index"))
 
@@ -72,13 +72,11 @@ def login():
     id = authorization_response["athlete"]['id']
     authenticated_athlete = Athlete.query.get(id)
 
-    if not authenticated_athlete:
-        # add new athlete to the db 
+    if not authenticated_athlete: 
         new_athlete = parse_response(authorization_response)
         db.session.add(new_athlete)
         db.session.commit()
     
-    # update records of existing athlete
 
     authenticated_athlete = Athlete.query.get(id)
 
@@ -97,12 +95,15 @@ def login():
 
     login_user(authenticated_athlete, remember=True)
 
+    flash(f'User successfully logged in your token expired in \
+            {authenticated_athlete.minutes_to_expire()} minutes', 'success')
+
     return redirect(url_for('athlete', id=current_user.id))
 
 @app.route("/logout")
 def logout():
     logout_user()
-    flash(f'User successfully logged out')
+    flash(f'User successfully logged out', 'success')
     return redirect(url_for("index"))
 
 @app.route('/athlete/<id>', methods=['POST','GET'])
@@ -110,18 +111,21 @@ def logout():
 def athlete(id):
     form = SubmitDownload()
     athlete = Athlete.query.filter_by(id=id).first_or_404()
+    if athlete.invalid_token():
+        return redirect(url_for("logout"))
     if form.validate_on_submit():
+
         date_from = form.dt.data.strftime('%Y-%m-%d')
-        #return form.dt.data.strftime('%Y-%m-%d')
         return redirect( url_for('download_csv', id=current_user.id, date_from=date_from))
+        
     return render_template('athlete.html', athlete=athlete, form=form)
 
 @app.route('/download_csv/<id>/<date_from>')
 @login_required
 def download_csv(id=None, date_from=None):
     # TODO 
-    # check if token still valid if not refresh token
-    # if token revoked or expired logout athlete and return to home page
+    # refresh token logic if expired
+    # round picture
     date_from = int(parse(date_from).timestamp())
     
     authenticated_athlete = Athlete.query.get(id)

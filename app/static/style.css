@@ -94,4 +94,12 @@
       font-size: 120px;
     }
   }
+
+  .account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }
+  
   

@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from flask_login import UserMixin
+
 from app import db, login
 
 
@@ -16,6 +19,11 @@ class Athlete(UserMixin, db.Model):
     refresh_token = db.Column(db.Text)
     token_type = db.Column(db.Text)
 
+    def invalid_token(self):
+        return True if int(datetime.now().timestamp()) > self.expires_at else False
+    
+    def minutes_to_expire(self):
+        return round(self.expires_at - (int(datetime.now().timestamp()) )/60)
 
     def __repr__(self):
         return '<Athlete {} - {} >'.format(self.firstname, self.id)
