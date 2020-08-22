@@ -6,7 +6,7 @@ services:
         image: strava-downloader
         container_name: strava-downloader
         ports:
-            - 5002:5000
+            - 5000:5000
         env_file:
             - .env
         volumes:

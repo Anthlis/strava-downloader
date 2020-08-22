@@ -25,7 +25,7 @@ from app.forms import SubmitDownload
 
 def authorize_url():
     """Generate authorization uri"""
-    app_url = 'http://127.0.0.1'
+    app_url = 'http://0.0.0.0'
     params = {
         "client_id": os.getenv('STRAVA_CLIENT_ID'),
         "response_type": "code",
