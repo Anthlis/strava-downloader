@@ -1,9 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if current_user.is_anonymous %}
-    <h3>To Authorise our app click on the link below</h3>
+    
+<div class="container">
+{% if current_user.is_anonymous %}
 
-    <a href="{{ url_for('authorize') }}">Link</a>
-    {% endif %}
+<a  href="{{ url_for('authorize') }}" class="strava-img" >
+    <img src="../static/img/btn_strava_connectwith_orange.png">
+</a>
+{% endif %}
+</div>
+
+
+<div class="container">
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h1> Get your activities from Strava in 3 easy clicks </h1>
+        </div>
+        <div>
+           <p> <h5> We developed this application which uses Strava <a href="http://developers.strava.com/">APIv3</a>  to safely authenticate to your your Strava 
+                account and retrieve your activity data. To get started just click on 
+                Connect with Strava button then pick the date from you want your data to be downloaded.
+                When done so, a csv file format will be downloaded automatically to your downloads folder  </h4>
+            </p>
+            <p> <h5> We are working on other formats to make and functionalities to make it more
+                convenient. Stay tunned. 
+            </h4>
+            </p>    
+        </div>
+    </div>
+    <div class="col-md-6">
+
+        <img src="../static/img/index-img.jpg" class="idx-img"  >
+
+    </div>
+</div>
+
+</div>
+    
+        
+
 {% endblock %}

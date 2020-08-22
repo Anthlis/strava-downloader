@@ -5,17 +5,23 @@
      <meta charset="utf-8">
      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
  
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:700,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+
      <!-- Bootstrap CSS -->
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
      <!-- Custom stlylesheet -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     
-    <title>Strava Activities Download</title>
+    <title>Activities Downloader</title>
 </head>
 <body>
+<div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Strava Downloader</a>
+        <a class="navbar-brand" href="{{ url_for('index') }}">Activities Downloader</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,28 +40,56 @@
             {% endif %}  
           </ul>
         </div>
+
+        <div>
+          <a href="https://strava.com/">
+          <img src="../static/img/api_logo_pwrdBy_strava_horiz_light.png" class="strava-img">
+        </a>
+        </div>
       </nav>
 
     <hr>
-    <div class="row">
-      <div class="col-md-8">
+    <div >
+      <div >
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
               <div class="alert alert-{{ category }}">
                 {{ message }}
-              </div>
+      
             {% endfor %}
           {% endif %}
         {% endwith %}  
-
+      </div>
+  
     {% block content %} {% endblock%}
+ 
  
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+</div>
 </body>
+<div class="wrapper">
+  <footer >
+    <div class="row copy">
+      <div class="col-md-6">
+      </div>
+      <div class="col-sm-1">
+       <a href="#"> Privacy Policy </a>
+      </div>
+      <div class="col-sm-1">
+        <a href="#"> Cookie Policy </a>
+       </div>
+      <div class="col-sm-2">
+        &copy; Copyright 2020 Pedro Junqueira 
+      </div>
+    </div>  
+    
+  
+  </footer>
+</div>
+
 </html>

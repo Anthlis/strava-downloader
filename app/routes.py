@@ -95,7 +95,7 @@ def login():
 
     login_user(authenticated_athlete, remember=True)
 
-    flash(f'User successfully logged in your token expired in \
+    flash(f'Athlete successfully logged in your token expired in \
             {authenticated_athlete.minutes_to_expire()} minutes', 'success')
 
     return redirect(url_for('athlete', id=current_user.id))
@@ -142,8 +142,10 @@ def download_csv(id=None, date_from=None):
 
     df = pd.DataFrame(df_data)
 
+    df.drop(columns=['athlete','map'], inplace=True)
+
     resp = make_response(df.to_csv())
-    resp.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    resp.headers["Content-Disposition"] = "attachment; filename=activities.csv"
     resp.headers["Content-Type"] = "text/csv"
 
     return resp   
