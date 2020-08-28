@@ -47,3 +47,7 @@ notes
 
 test_.py
 heroku_logs
+
+Procfile
+
+heroku_logs
