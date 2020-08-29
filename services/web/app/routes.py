@@ -29,7 +29,7 @@ def authorize_url():
     params = {
         "client_id": os.getenv('STRAVA_CLIENT_ID'),
         "response_type": "code",
-        "redirect_uri": f"{app_url}:5000/login",
+        "redirect_uri": f"{app_url}/login",
         "scope": "read,profile:read_all,activity:read",
         "approval_prompt": "force"
     }
@@ -95,7 +95,7 @@ def login():
 
     login_user(authenticated_athlete, remember=True)
 
-    flash(f'Athlete successfully logged in your token expired in \
+    flash(f'Athlete successfully logged in your token expires in \
             {authenticated_athlete.minutes_to_expire()} minutes', 'success')
 
     return redirect(url_for('athlete', id=current_user.id))
@@ -125,7 +125,6 @@ def athlete(id):
 def download_csv(id=None, date_from=None):
     # TODO 
     # refresh token logic if expired
-    # round picture
     date_from = int(parse(date_from).timestamp())
     
     authenticated_athlete = Athlete.query.get(id)
